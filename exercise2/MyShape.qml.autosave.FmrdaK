@@ -1,0 +1,68 @@
+import QtQuick 2.0
+
+Item {
+    id: myshape
+    property int temp: 0
+    function createShape()
+    {
+        if(ranBox === 0)
+        {
+            Rectangle{
+
+                width: 90
+                height: 100
+                color: ranColor
+                border.color: "black"
+                radius: 10
+                Text {
+                    font.pixelSize: 40
+                    anchors.centerIn: parent
+                    text: ranVal.toString()
+                }
+            }
+        }
+        else if(ranBox === 1)
+        {
+            Shape {
+                id: shape1
+                width: 90
+                height: 100
+                anchors.fill: parent
+                ShapePath {
+                    strokeWidth: 2
+                    strokeColor: "black"
+                    fillColor: "red"
+                    strokeStyle: ShapePath.SolidLine
+                    startX: shape.width/2
+                    startY: 0
+                    PathLine { x: shape.width; y: shape.height }
+                    PathLine { x: 0; y: shape.height }
+                    PathLine { x: shape.width/2; y: 0 }
+                }
+                Text {
+                    font.pixelSize: 40
+                    anchors.centerIn: parent
+                    text: ranVal.toString()
+                    anchors.bottom: parent.bottom
+                }
+            }
+        }
+        else if(ranBox === 2)
+        {
+            Rectangle{
+                width: 100
+                height: 100
+                color: ranColor
+                border.color: "black"
+                radius: 100
+                Text {
+                    font.pixelSize: 40
+                    anchors.centerIn: parent
+                    text: ranVal.toString()
+                }
+            }
+        }
+    }
+    
+
+}

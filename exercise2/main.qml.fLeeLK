@@ -1,0 +1,157 @@
+import QtQuick 2.12
+import QtQuick.Controls
+import QtQuick.Window 2.12
+
+Window {
+    id: root
+    width: 660
+    height: 480
+    visible: true
+    title: qsTr("Hello World")
+    property int number: 0
+    Rectangle{
+        id: rec
+        anchors.top: parent.top
+        anchors.topMargin: 20
+        anchors.left: parent.left
+        anchors.leftMargin: 10
+        width: 520
+        height: 420
+        color: "white"
+        border.color: "black"
+
+        Grid{
+            columns: 4
+
+
+        }
+
+    }
+    Rectangle{
+        id: shape
+        anchors.top: box.bottom
+        anchors.topMargin: 30
+        anchors.left: box.left
+        width: 100
+        height: 110
+        color: "white"
+        Connections{
+           // anchors.fill: parent
+            target: box
+            onMyshapeChanged:{
+                if(box.myshape === 1)
+                {
+
+                    loadshape.sourceComponent = tria
+                }
+                if(box.myshape === 2)
+                {
+                    loadshape.sourceComponent = rectan
+                }
+
+                console.log("idx:", box.myshape)
+            }
+        }
+
+        Loader{
+            id: loadshape
+            anchors.fill: parent
+
+        }
+    }
+    Component{
+        id: rectan
+        Rectangle{
+
+            width: 90
+            height: 100
+            color: "white"
+            border.color: "black"
+            Text {
+                anchors.fill: parent
+                font.pixelSize: 20
+                text: Math.root.number.toString()
+            }
+        }
+    }
+    Component{
+        id: tria
+        Triangle{
+            id: triangle
+            anchors.fill: parent
+//            width: 90
+//            height: 100
+            Text {
+                anchors.fill: parent
+                font.pixelSize: 20
+                text: Math.root.number.toString()
+            }
+        }
+    }
+
+
+    ComboBox {
+        id:box
+        property int myshape: 0
+        width: 90
+        height: 30
+        anchors.top: parent.top
+        anchors.topMargin: 20
+        anchors.left: rec.right
+        anchors.leftMargin: 10
+         model: ListModel {
+             id: model
+             ListElement { text: "BOX" }
+             ListElement { text: "CIRCLE" }
+             ListElement { text: "TRIANGLE" }
+         }
+         onActivated: {
+             myshape = currentIndex
+
+             console.log("index: ", box.currentIndex )
+             console.log("text: ", box.currentText)
+         }
+     }
+
+    Mybutton{
+        id: button
+        anchors.top: shape.bottom
+        anchors.topMargin: 50
+        anchors.left: rec.right
+        anchors.leftMargin: 15
+        onMyIndexChanged: {
+            if(myIndex === 0)
+            {
+                /// code for generate
+                time.start()
+
+
+            }
+            else if(myIndex === 1)
+            {
+                /// code for add by cpp
+            }
+            else if(myIndex === 2)
+            {
+                /// code for add by qml
+            }
+            else if(myIndex === 3)
+            {
+                /// code for clear
+            }
+        }
+    }
+    Timer{
+        id: time
+        interval: 1000
+        repeat: false
+        running: false
+    }
+    Repeater{
+        model: 0
+        //root.number =
+    }
+
+
+
+}

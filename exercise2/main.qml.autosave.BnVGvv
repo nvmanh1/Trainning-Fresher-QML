@@ -1,0 +1,162 @@
+import QtQuick 2.12
+import QtQuick.Controls
+import QtQuick.Window 2.12
+import QtQuick.Layouts
+Window {
+    id: root
+    width: 660
+    height: 480
+    visible: true
+    title: qsTr("Hello World")
+    property int number: 0
+    property int countTime: 0
+    property int ranBox: 0
+    property color ranColor: "white"
+    property int ranVal: 0
+
+
+    Rectangle{
+        id: rec
+        anchors.top: parent.top
+        anchors.topMargin: 20
+        anchors.left: parent.left
+        anchors.leftMargin: 10
+        width: 520
+        height: 420
+        color: "white"
+        border.color: "black"
+
+        Flickable {
+            anchors.fill: parent
+            contentWidth: 400
+            contentHeight: 800
+            clip: true
+
+            ListModel {
+                id: imageModel
+
+            }
+
+
+            Grid {
+                id: imageGrid
+                columns: 2
+                spacing: 2
+                Repeater {
+                    model: imageModel
+                   // delegate: load
+                }
+           }
+        }
+
+    }
+    Component {
+        id: compBoxShape
+        MyBoxes {
+            id: box
+            boxType: selectedBoxType
+            boxColor: selectedBoxColor
+            boxValue: selectedBoxValue
+        }
+    Rectangle{
+        id: shape
+        anchors.top: box.bottom
+        anchors.topMargin: 30
+        anchors.left: box.left
+        width: 110
+        height: 110
+        color: "white"
+        Connections{
+            target: box
+            onMyshapeChanged:{
+                loadshape.source = "MyShape.qml"
+                console.log("idx:", box.myshape)
+            }
+        }
+
+        Loader{
+            id: loadshape
+            anchors.fill: parent
+
+        }
+    }
+
+    ComboBox {
+        id:box
+        property int myshape: 0
+        width: 90
+        height: 30
+        anchors.top: parent.top
+        anchors.topMargin: 20
+        anchors.left: rec.right
+        anchors.leftMargin: 10
+        model: ListModel {
+
+             ListElement { text: "BOX" }
+             ListElement { text: "CIRCLE" }
+             ListElement { text: "TRIANGLE" }
+         }
+         onActivated: {
+             box.myshape = currentIndex
+
+             console.log("index: ", box.currentIndex )
+             console.log("text: ", box.currentIndex)
+         }
+     }
+
+    Mybutton{
+        id: button
+        anchors.top: shape.bottom
+        anchors.topMargin: 50
+        anchors.left: rec.right
+        anchors.leftMargin: 15
+        onMyIndexChanged: {
+            if(myIndex === 0)
+            {
+                time.start()
+                console.log("ran box: ", ranBox)
+            }
+            else if(myIndex === 1)
+            {
+
+
+            }
+            else if(myIndex === 2)
+            {
+               imageModel.append({  })
+
+            }
+            else if(myIndex === 3)
+            {
+                /// code for clear
+            }
+        }
+    }
+    Timer{
+        id: time
+        interval: 100
+        repeat: true
+       // running: true
+        onTriggered: {
+            countTime++
+        }
+    }
+    onCountTimeChanged:{
+        console.log("countTime: ", countTime)
+        root.ranBox = Math.random() * 3;
+        root.ranVal = Math.random() * 100;
+        root.ranColor = Qt.rgba(Math.random(), Math.random(), Math.random(), 1);
+
+        if(countTime === 20)
+        {
+            countTime = 0;
+            time.stop()
+        }
+    }
+    onRanBoxChanged: {
+        box.myshape = ranBox
+        console.log(ranBox)
+
+    }
+
+}

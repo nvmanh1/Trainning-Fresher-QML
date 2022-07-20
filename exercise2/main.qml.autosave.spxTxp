@@ -1,0 +1,193 @@
+import QtQuick 2.12
+import QtQuick.Controls
+import QtQuick.Window 2.12
+
+Window {
+    id: root
+    width: 660
+    height: 480
+    visible: true
+    title: qsTr("Hello World")
+    property int number: 0
+    property int countTime: 0
+    property int ranBox: 0
+    property int ranColor: 0
+    property int ranVal: 0
+
+    Rectangle{
+        id: rec
+        anchors.top: parent.top
+        anchors.topMargin: 20
+        anchors.left: parent.left
+        anchors.leftMargin: 10
+        width: 520
+        height: 420
+        color: "white"
+        border.color: "black"
+
+        Grid{
+            columns: 4
+
+
+        }
+
+    }
+    Rectangle{
+        id: shape
+        anchors.top: box.bottom
+        anchors.topMargin: 30
+        anchors.left: box.left
+        width: 100
+        height: 110
+        color: "white"
+        Connections{
+            target: box
+            onMyshapeChanged:{
+                if(box.myshape === 2)
+                {
+                    loadshape.sourceComponent = tria
+                }
+                if(box.myshape === 0)
+                {
+                    loadshape.sourceComponent = rectan
+                }
+                if(box.myshape === 1)
+                {
+                    loadshape.sourceComponent = circle
+                }
+
+                console.log("idx:", box.myshape)
+            }
+        }
+
+        Loader{
+            id: loadshape
+            anchors.fill: parent
+
+        }
+    }
+    Component{
+        id: rectan
+        Rectangle{
+
+            width: 90
+            height: 100
+            color: ranColor
+            border.color: "black"
+            radius: 10
+            Text {
+                font.pixelSize: 40
+                anchors.centerIn: parent
+                text: Math.root.ranVal.toString()
+            }
+        }
+    }
+    Component{
+        id: tria
+        Triangle{
+            id: triangle
+            anchors.fill: parent
+            width: 90
+            height: 100
+            itemText: Math.root.number.toString()
+        }
+    }
+    Component{
+        id: circle
+        Rectangle{
+            width: 90
+            height: 90
+            color: ranColor
+            border.color: "black"
+            radius: 50
+            Text {
+                font.pixelSize: 40
+                anchors.centerIn: parent
+                text: Math.root.ranVal.toString()
+            }
+        }
+    }
+
+
+    ComboBox {
+        id:box
+        property int myshape: 0
+        width: 90
+        height: 30
+        anchors.top: parent.top
+        anchors.topMargin: 20
+        anchors.left: rec.right
+        anchors.leftMargin: 10
+        model: ListModel {
+             id: model
+             ListElement { text: "BOX" }
+             ListElement { text: "CIRCLE" }
+             ListElement { text: "TRIANGLE" }
+         }
+         onActivated: {
+             myshape = highlightedIndex
+
+             console.log("index: ", box.highlightedIndex )
+             console.log("text: ", box.highlightedIndex)
+         }
+     }
+
+    Mybutton{
+        id: button
+        anchors.top: shape.bottom
+        anchors.topMargin: 50
+        anchors.left: rec.right
+        anchors.leftMargin: 15
+        onMyIndexChanged: {
+            if(myIndex === 0)
+            {
+                /// code for generate
+                time.start()
+                root.getRand();
+
+            }
+            else if(myIndex === 1)
+            {
+                /// code for add by cpp
+            }
+            else if(myIndex === 2)
+            {
+                box.currentIndex = 2
+            }
+            else if(myIndex === 3)
+            {
+                /// code for clear
+            }
+        }
+    }
+    Timer{
+        id: time
+        interval: 10
+        repeat: true
+        running: true
+        onTriggered: {
+            countTime++
+        }
+    }
+    onCountTimeChanged:{
+        if(countTime === 100)
+        {
+            countTime = 0;
+            time.stop()
+        }
+    }
+
+    function getRand()
+    {
+        while(countTime < 100)
+        {
+            
+            ranBox = Math.random() * 2;
+            ranColor = Qt.rgba(Math.random(), Math.random(), Math.random(), 1);
+            ranVal = Math.random() * 2;
+        }
+    }
+
+
+
+}
